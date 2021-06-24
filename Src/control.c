@@ -214,6 +214,28 @@ void PWM_Init(void) {
 }
 #endif
 
+#ifdef SUPPORT_BUTTONS  
+
+void SupportButton_Init(void) {
+  /*Configure GPIO pin : PB10 */
+  GPIO_InitTypeDef GPIO_InitStruct;
+  GPIO_InitStruct.Pin             = BUTTON1_RIGHT_PIN;
+  GPIO_InitStruct.Mode            = GPIO_MODE_INPUT;
+  GPIO_InitStruct.Speed           = GPIO_SPEED_FREQ_MEDIUM;
+  GPIO_InitStruct.Pull            = GPIO_PULLUP;
+  HAL_GPIO_Init(BUTTON1_RIGHT_PORT, &GPIO_InitStruct);
+
+  /*Configure GPIO pin : PB11 */
+  GPIO_InitTypeDef GPIO_InitStruct2;
+  GPIO_InitStruct2.Pin            = BUTTON2_RIGHT_PIN;
+  GPIO_InitStruct2.Mode           = GPIO_MODE_INPUT;
+  GPIO_InitStruct2.Speed          = GPIO_SPEED_FREQ_MEDIUM;
+  GPIO_InitStruct2.Pull           = GPIO_PULLUP;
+  HAL_GPIO_Init(BUTTON2_RIGHT_PORT, &GPIO_InitStruct2);
+}
+
+ #endif
+
 uint8_t Nunchuk_Ping(void) {
   if (HAL_I2C_Master_Receive(&hi2c2,0xA4,(uint8_t*)nunchuk_data, 1, 10) == HAL_OK) {
     return 1;

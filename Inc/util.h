@@ -69,9 +69,11 @@ typedef struct {
 
 // Initialization Functions
 void BLDC_Init(void);
+void BLDC_ReInit(void);
 void Input_Lim_Init(void);
 void Input_Init(void);
 void UART_DisableRxErrors(UART_HandleTypeDef *huart);
+void SupportButton_Init(void);
 
 // General Functions
 void poweronMelody(void);
@@ -86,6 +88,8 @@ void standstillHold(void);
 void electricBrake(uint16_t speedBlend, uint8_t reverseDir);
 void cruiseControl(uint8_t button);
 int  checkInputType(int16_t min, int16_t mid, int16_t max);
+void saveConfig(void);
+void readSupportButtons(void);
 
 // Input Functions
 void calcInputCmd(InputStruct *in, int16_t out_min, int16_t out_max);

@@ -67,6 +67,10 @@ extern volatile uint16_t pwm_captured_ch1_value;
 extern volatile uint16_t pwm_captured_ch2_value;
 #endif
 
+#ifdef SUPPORT_BUTTONS_RIGHT
+boolean_T btn1;  // Blue
+boolean_T btn2;  // Green
+#endif
 
 //------------------------------------------------------------------------
 // Global variables set here in util.c
@@ -269,7 +273,13 @@ void BLDC_Init(void) {
   BLDC_controller_initialize(rtM_Right);
 }
 
-void Input_Lim_Init(void) {     // Input Limitations - ! Do NOT touch !
+void BLDC_ReInit(void) {
+    /* Initialize BLDC controllers */
+  BLDC_controller_initialize(rtM_Left);
+  BLDC_controller_initialize(rtM_Right);
+}
+
+void Input_Lim_Init(void) {     // Input Limitations - ! Do NOT touch !    
   if (rtP_Left.b_fieldWeakEna || rtP_Right.b_fieldWeakEna) {
     INPUT_MAX = MAX( 1000, FIELD_WEAK_HI);
     INPUT_MIN = MIN(-1000,-FIELD_WEAK_HI);
@@ -306,6 +316,14 @@ void Input_Init(void) {
   #if defined(DEBUG_SERIAL_USART3) || defined(CONTROL_SERIAL_USART3) || defined(SIDEBOARD_SERIAL_USART3)
     HAL_UART_Receive_DMA(&huart3, (uint8_t *)rx_buffer_R, sizeof(rx_buffer_R));
     UART_DisableRxErrors(&huart3);
+  #endif
+
+  #if defined(SIDEBOARD_SERIAL_USART3)
+    HAL_UART_Receive_DMA(&huart3, (uint8_t *)&Sideboard_Rnew, sizeof(Sideboard_Rnew));
+  #endif
+
+  #ifdef SUPPORT_BUTTONS
+    SupportButton_Init();
   #endif
 
   #if !defined(VARIANT_HOVERBOARD) && !defined(VARIANT_TRANSPOTTER)
@@ -907,6 +925,7 @@ void readInputRaw(void) {
         input1[inIdx].cmd = adc_buffer.l_tx2;
         input2[inIdx].cmd = adc_buffer.l_rx2;
       #endif
+
     #endif
 }
 
@@ -1294,7 +1313,12 @@ void usart_process_sideboard(SerialSideboard *Sideboard_in, SerialSideboard *Sid
 }
 #endif
 
-
+#if defined(SUPPORT_BUTTONS_RIGHT) 
+  void readSupportButtons(void) {
+    btn1 = !HAL_GPIO_ReadPin(GPIOB, GPIO_PIN_10);
+    btn2 = !HAL_GPIO_ReadPin(GPIOB, GPIO_PIN_11);
+  }
+#endif
 /* =========================== Sideboard Functions =========================== */
 
 /*

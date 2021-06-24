@@ -97,6 +97,10 @@ extern volatile uint16_t ppm_captured_value[PPM_NUM_CHANNELS+1];
 extern volatile uint16_t pwm_captured_ch1_value;
 extern volatile uint16_t pwm_captured_ch2_value;
 #endif
+#if defined(SUPPORT_BUTTONS)
+extern volatile boolean_T btn1;
+extern volatile boolean_T btn2;
+#endif
 
 
 //------------------------------------------------------------------------
@@ -214,6 +218,10 @@ int main(void) {
     readCommand();                        // Read Command: input1[inIdx].cmd, input2[inIdx].cmd
     calcAvgSpeed();                       // Calculate average measured speed: speedAvg, speedAvgAbs
 
+    #ifdef SUPPORT_BUTTONS
+      readSupportButtons();
+    #endif
+
     #ifndef VARIANT_TRANSPOTTER
       // ####### MOTOR ENABLING: Only if the initial input is very small (for SAFETY) #######
       if (enable == 0 && (!rtY_Left.z_errCode && !rtY_Right.z_errCode) && (input1[inIdx].cmd > -50 && input1[inIdx].cmd < 50) && (input2[inIdx].cmd > -50 && input2[inIdx].cmd < 50)){
@@ -271,6 +279,7 @@ int main(void) {
             input2[inIdx].cmd  = (int16_t)((-input2[inIdx].cmd * speedBlend) >> 15);
           }
         }
+        */
       #endif
 
       // ####### LOW-PASS FILTER #######
@@ -521,6 +530,7 @@ int main(void) {
     if (inactivity_timeout_counter > (INACTIVITY_TIMEOUT * 60 * 1000) / (DELAY_IN_MAIN_LOOP + 1)) {  // rest of main loop needs maybe 1ms
       poweroff();
     }
+    
 
 
     // HAL_GPIO_TogglePin(LED_PORT, LED_PIN);                 // This is to measure the main() loop duration with an oscilloscope connected to LED_PIN
