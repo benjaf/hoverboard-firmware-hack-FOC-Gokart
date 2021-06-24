@@ -213,25 +213,23 @@ void PWM_Init(void) {
   HAL_TIM_Base_Start(&TimHandle);
 }
 #endif
-
-#ifdef SUPPORT_BUTTONS  
-
+#ifdef SUPPORT_BUTTONS_RIGHT
 void SupportButton_Init(void) {
   /*Configure GPIO pin : PB10 */
   GPIO_InitTypeDef GPIO_InitStruct;
-  GPIO_InitStruct.Pin             = BUTTON1_RIGHT_PIN;
+  GPIO_InitStruct.Pin             = BUTTON1_PIN;
   GPIO_InitStruct.Mode            = GPIO_MODE_INPUT;
   GPIO_InitStruct.Speed           = GPIO_SPEED_FREQ_MEDIUM;
   GPIO_InitStruct.Pull            = GPIO_PULLUP;
-  HAL_GPIO_Init(BUTTON1_RIGHT_PORT, &GPIO_InitStruct);
+  HAL_GPIO_Init(BUTTON1_PORT, &GPIO_InitStruct);
 
   /*Configure GPIO pin : PB11 */
   GPIO_InitTypeDef GPIO_InitStruct2;
-  GPIO_InitStruct2.Pin            = BUTTON2_RIGHT_PIN;
+  GPIO_InitStruct2.Pin            = BUTTON2_PIN;
   GPIO_InitStruct2.Mode           = GPIO_MODE_INPUT;
   GPIO_InitStruct2.Speed          = GPIO_SPEED_FREQ_MEDIUM;
   GPIO_InitStruct2.Pull           = GPIO_PULLUP;
-  HAL_GPIO_Init(BUTTON2_RIGHT_PORT, &GPIO_InitStruct2);
+  HAL_GPIO_Init(BUTTON2_PORT, &GPIO_InitStruct2);
 }
 
  #endif

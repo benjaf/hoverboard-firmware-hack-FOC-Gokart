@@ -1233,6 +1233,13 @@ void usart_process_debug(uint8_t *userCommand, uint32_t len)
 
 #endif // SERIAL_DEBUG
 
+#if defined(SUPPORT_BUTTONS_RIGHT)
+void readSupportButtons(void) {
+  btn1 = !HAL_GPIO_ReadPin(GPIOB, GPIO_PIN_10);
+  btn2 = !HAL_GPIO_ReadPin(GPIOB, GPIO_PIN_11);
+}
+#endif
+
 /*
  * Process command Rx data
  * - if the command_in data is valid (correct START_FRAME and checksum) copy the command_in to command_out
